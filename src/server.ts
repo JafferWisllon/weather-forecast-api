@@ -20,10 +20,10 @@ export class SetupServer extends Server {
 
   private setupControllers(): void {
     const forecastControler = new ForecastController();
-    this.addControllers([forecastControler])
+    this.addControllers([forecastControler]);
   }
 
   public getApp(): Application {
-    return this.app
+    return this.app;
   }
 }
