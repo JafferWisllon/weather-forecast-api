@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Controller, Get } from '@overnightjs/core';
 import { Beach } from '@src/models/beach';
 import { Forecast } from '@src/services/forecast';
@@ -9,8 +10,12 @@ const forecast = new Forecast();
 export class ForecastController {
   @Get('')
   public async getForecastForLoggedUser(_: Request, res: Response): Promise<void> {
-   const beachs = await Beach.find({});
-   const forecastData = await forecast.processForecastForBeaches(beachs);
-   res.status(200).send(forecastData);
+    try {
+      const beachs = await Beach.find({});
+      const forecastData = await forecast.processForecastForBeaches(beachs);
+      res.status(200).send(forecastData);
+    } catch(err: any) {
+      res.status(500).send({ error: 'Something went wrong' });
+    }
   }
 }
