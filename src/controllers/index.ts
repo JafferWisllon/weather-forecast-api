@@ -6,7 +6,6 @@ export abstract class BaseController {
   protected sendCreateUpdateErrorResponse(res: Response, error: mongoose.Error.ValidationError | Error) {
     if (error instanceof mongoose.Error.ValidationError) {
       const clientError = this.handleClientErros(error)
-      console.log(clientError)
       res.status(clientError.code).send({ code: clientError.code, error: clientError.error })
     } else {
       res.status(500).send({ code: 500, error: 'Something went wrong!' })
