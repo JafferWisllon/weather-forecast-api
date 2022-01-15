@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Controller, Get } from '@overnightjs/core';
+import { ClassMiddleware, Controller, Get } from '@overnightjs/core';
+import { authMiddleware } from '@src/middlewares/auth';
 import { Beach } from '@src/models/beach';
 import { Forecast } from '@src/services/forecast';
 import { Request, Response } from 'express';
@@ -7,11 +8,12 @@ import { Request, Response } from 'express';
 const forecast = new Forecast();
 
 @Controller('forecast')
+@ClassMiddleware(authMiddleware)
 export class ForecastController {
   @Get('')
-  public async getForecastForLoggedUser(_: Request, res: Response): Promise<void> {
+  public async getForecastForLoggedUser(req: Request, res: Response): Promise<void> {
     try {
-      const beachs = await Beach.find({});
+      const beachs = await Beach.find({user: req.decoded?.id});
       const forecastData = await forecast.processForecastForBeaches(beachs);
       res.status(200).send(forecastData);
     } catch(err: any) {
